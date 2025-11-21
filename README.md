@@ -1,162 +1,192 @@
-<<<<<<< HEAD
-<PASTE README CONTENT HERE>
-=======
 # Azure Fundamentals Capstone Project  
-### Building a Secure Multi-VNet Cloud Environment on Microsoft Azure
+## Building a Secure Multi-VNet Cloud Environment on Microsoft Azure
 
-![Architecture Diagram](./Azure%20Fundamentals%20Capstone%20Project%20Seyi.PNG)
+![Architecture Diagram](Azure%20Fundamentals%20Capstone%20Project%20Seyi.PNG)
 
----
-
-## 📌 Project Overview  
-This project demonstrates the design and deployment of a **secure multi-VNet Azure environment**, built as part of an Azure Fundamentals capstone. It follows best practices in **network segmentation**, **identity management**, **private connectivity**, and **zero-trust principles**.
-
-The environment includes:
-
-- A **Hub–Spoke VNet architecture**
-- Azure **Bastion** for secure VM access (no public IPs)
-- Azure **Key Vault** with managed identity access
-- Azure **Storage Account** using **private endpoints** (no public exposure)
-- Network Security Groups (NSGs) controlling traffic flow
-- Private VM-to-VM connectivity across VNets using **VNet Peering**
-
-This repo contains all documentation, architecture diagrams, and screenshots to verify the deployment.
+This project demonstrates the design and deployment of a **secure multi-VNet Azure environment**, following industry best practices in cloud architecture, DevOps, and cybersecurity.  
+It aligns with Microsoft’s Cloud Adoption Framework and reflects patterns used in real enterprise environments.
 
 ---
 
-## 🧱 Architecture Components  
+# 📌 Project Overview
 
-### **1. Hub VNet (VNet1)**
+The environment is built using a **Hub–Spoke network topology**, ensuring traffic isolation, centralized security controls, and clear separation of workloads.
+
+This deployment includes:
+
+- Hub VNet + Spoke VNet configuration  
+- Secure VNet peering  
+- Azure Bastion for SSH access (no public IPs)  
+- Private Endpoint–only Storage Account  
+- Azure Key Vault with Managed Identity  
+- Hardened Network Security Groups (NSGs)  
+- Linux VMs with zero public exposure  
+- End-to-end private connectivity testing  
+
+This repository contains all diagrams, evidence screenshots, and documentation for the full deployment.
+
+---
+
+# 🧱 Architecture Components
+
+## 🛰 Hub VNet – `nimbus-hub-vnet`
 - Subnet: `nimbus-hub-subnet`
 - VMs:  
   - `vm-hub-1`  
   - `vm-hub-2`
-- Attached: NSG
-- Peering to Spoke VNet
+- NSG attached
+- VNet Peering to Spoke
 
-### **2. Spoke VNet (VNet2)**
+## 🌐 Spoke VNet – `nimbus-spoke-vnet`
 - Subnet: `nimbus-spoke-subnet`
 - VM:  
   - `vm-spoke-1`
-- Attached: NSG
-- Houses the **private Storage Account endpoint**
+- NSG attached
+- Hosts Storage Private Endpoint
 
-### **3. Security Services**
-- **Azure Bastion** → SSH access to all VMs without public IPs  
-- **Azure Key Vault** → Secrets stored securely, accessible only via Managed Identity  
-- **NSGs** → Rules for SSH from Bastion, ICMP between VNets, and deny-all defaults  
+## 🔐 Security Services
+- **Azure Bastion** → SSH access without exposing port 22  
+- **Azure Key Vault** → Secrets accessible only via Managed Identity  
+- **NSGs** →  
+  - Allow SSH *only* from Bastion  
+  - Allow ICMP between VNets  
+  - Deny-all catch rules  
 
-### **4. Storage**
-- **Private Endpoint Only** (Public network access = Disabled)
-- Blob container used for file uploads (`test.txt`)
-
----
-
-## 🔐 Key Security Features
-
-### **Zero Public Exposure**
-- No VM has a public IP  
-- Bastion handles all SSH traffic  
-- Storage Account is private-only  
-- Key Vault access restricted to managed identity
-
-### **Restricted Network Flows**
-- SSH: Allowed **only** from Azure Bastion  
-- ICMP traffic allowed within VNets for testing  
-- Deny-all catch rules at bottom of NSGs  
-
-### **Identity-First Architecture**
-- Key Vault is accessed using **Managed Identity**, not credentials  
-- No secrets stored on VMs or hard-coded  
+## 📦 Storage
+- Private Endpoint enabled  
+- Public network access disabled  
+- Blob container contains `test.txt`
 
 ---
 
-## 📸 Screenshots Included
+# 🔐 Key Security Principles Implemented
 
-All verification screenshots are stored in:
+### 🔒 Zero Public Exposure  
+- 0 public IP addresses  
+- Bastion-only entry point into VMs  
+- Storage is private-only  
+- Key Vault is identity-locked  
 
-Nimbus_Capstone_Screenshots.zip
+### 🛡 Least Privilege Networking  
+- SSH allowed only from Azure Bastion  
+- ICMP allowed only VNet-to-VNet  
+- All other inbound traffic blocked  
 
-yaml
-Copy code
-
-They demonstrate:
-
-- VNet peerings  
-- NSG rule configurations  
-- Private endpoint settings  
-- Storage access disabled  
-- Key Vault secrets  
-- Bastion terminal session  
-- VM list showing no public IPs  
+### 🪪 Identity-Based Access  
+- Managed Identity used for Key Vault  
+- No secrets stored on VMs  
+- No hardcoded credentials  
 
 ---
 
-## 📂 Repository Structure
+# 📁 Screenshots (Verification & Evidence)
+
+All screenshots are stored in the main repository folder.
+
+---
+
+## 🔐 Key Vault – Secret Access  
+![Key Vault](KeyVaultSecrets.png)
+
+---
+
+## 🧱 Network Security Groups (NSGs)
+
+### Hub NSG  
+![Hub NSG](HubNSG.png)
+
+### Spoke NSG  
+![Spoke NSG](SpokeNSG.png)
+
+---
+
+## 🌐 Virtual Networks & Subnets
+
+### Hub VNet  
+![Hub VNet](Nimbus-hub-vnet.png)
+
+### Spoke VNet  
+![Spoke VNet](Nimbus-spoke-vnet.png)
+
+---
+
+## 🔗 VNet Peering
+
+### Hub → Spoke  
+![Hub Peering](hubvnetpeerings.png)
+
+### Spoke → Hub  
+![Spoke Peering](spokevnetpeerings.png)
+
+---
+
+## 📦 Storage Account – Private Endpoint Secured  
+![Blob Storage](testtxtincontainer.png)
+
+---
+
+## 🧪 Connectivity Testing  
+![Ping Test](ping.png)
+
+---
+
+## 🔐 Azure Bastion Access  
+![Bastion](Bastionconnectionvm1.png)
+
+---
+
+# 📂 Repository Structure
 
 azure-fundamentals-capstone/
-│── Azure Fundamentals Capstone Project Seyi.PNG # Architecture diagram
-│── Azure Fundamentals Capstone Project Seyi.drawio # Editable diagram
-│── Nimbus Azure Fundamentals Capstone Project.docx # Full project report
-│── Nimbus_Capstone_Screenshots.zip # Screenshot evidence
-│── README.md # Project documentation
+│
+├── Azure Fundamentals Capstone Project Seyi.PNG
+├── Azure Fundamentals Capstone Project Seyi.drawio
+├── Nimbus Azure Fundamentals Capstone Project.docx
+├── Bastionconnectionvm1.png
+├── HubNSG.png
+├── KeyVaultSecrets.png
+├── Nimbus-hub-vnet.png
+├── Nimbus-spoke-vnet.png
+├── SpokeNSG.png
+├── VMsecurity.png
+├── hubvnetpeerings.png
+├── ping.png
+├── spokevnetpeerings.png
+├── testtxtincontainer.png
+└── README.md
 
-yaml
+markdown
 Copy code
 
 ---
 
-## 🧪 Connectivity Tests Performed
+# 🚀 Skills Demonstrated
 
-### ✔ SSH from Bastion  
-Connected to `vm-hub-1` successfully.
+### **Cloud Engineering**
+- Hub–Spoke Architecture  
+- Private Endpoints  
+- VNet Peering  
+- Secure VM Access  
 
-### ✔ Private ICMP Tests  
-From `vm-hub-1`:
-ping 10.0.1.5 # vm-hub-2
-ping 10.1.1.4 # vm-spoke-1
+### **DevOps**
+- Infrastructure documentation  
+- Cloud environment provisioning  
+- Identity-based access control  
 
-yaml
-Copy code
-Both returned valid replies, confirming:
-
-- VNet peering  
-- NSG rules  
-- Private routing  
-
----
-
-## 🛠 Azure Services Used
-
-- **Azure Virtual Networks (Hub & Spoke)**
-- **VNet Peering**
-- **Azure Bastion**
-- **Azure Storage (Blob)**
-- **Private Endpoints**
-- **Azure Key Vault**
-- **Managed Identities**
-- **NSGs (Network Security Groups)**
+### **Cybersecurity**
+- Zero-trust access  
+- Network segmentation  
+- NSG hardening  
+- Managed Identity  
+- Secure secret storage  
 
 ---
 
-## 🚀 Deployment Skills Demonstrated  
+# 👤 Author
 
-This project demonstrates fundamental cloud engineering and DevOps-aligned skills, including:
-
-- Infrastructure design following Hub–Spoke topology  
-- Secure access patterns using Bastion  
-- Identity-based security using Managed Identity  
-- Private service access (no public endpoints)
-- Environment hardening with NSGs  
-- Effective cloud documentation & verification  
-
----
-
-## 👤 Author  
 **Oluwaseyi Adesegun Bello**  
-DevOps Engineer · MSc Human-Centred AI  
-Security+ Certified · Azure · Terraform · Kubernetes · Linux  
-GitHub: https://github.com/seyiabello  
-LinkedIn: https://www.linkedin.com/in/oluwaseyi-bello-2653a2215/
+DevOps Engineer | MSc Human-Centred AI  
+Security+ Certified | Azure | Kubernetes | Terraform  
 
->>>>>>> 6385b58dd74f603b6f296ec18a6ce7c438e77c59
+🔗 **GitHub:** https://github.com/seyiabello  
+🔗 **LinkedIn:** https://www.linkedin.com/in/oluwaseyi-bello-2653a2215/
